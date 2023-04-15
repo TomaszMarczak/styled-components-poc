@@ -49,34 +49,7 @@ export default function App() {
   const [components, setComponents] = useState<ReactElement[] | null>(() =>
     generateComponents()
   );
-  const [theme, setTheme] = useState(() => "light");
-
-  const themeSet = () => {
-    switch (theme) {
-      case "light":
-        return lightTheme;
-      case "dark":
-        return darkTheme;
-      case "random":
-        return {
-          colors: {
-            bg: randomLightColor(),
-            text: "#333",
-            bgButton: randomLightColor(),
-          },
-        };
-      default:
-        return lightTheme;
-    }
-  };
-
-  useEffect(() => {
-    setComponents(generateComponents());
-  }, [quantity]);
-
-  const handleSetTheme = (input: string) => {
-    setTheme(input);
-  };
+  const [theme, setTheme] = useState(lightTheme);
 
   function generateComponents() {
     const newComponents = [];
@@ -86,8 +59,35 @@ export default function App() {
     return newComponents;
   }
 
+  const handleSetTheme = (theme: string) => {
+    switch (theme) {
+      case "light":
+        setTheme(lightTheme);
+        break;
+      case "dark":
+        setTheme(darkTheme);
+        break;
+      case "random":
+        setTheme({
+          colors: {
+            bg: randomLightColor(),
+            text: "#333",
+            bgButton: randomLightColor(),
+          },
+        });
+        break;
+      default:
+        setTheme(lightTheme);
+        break;
+    }
+  };
+
+  useEffect(() => {
+    setComponents(generateComponents());
+  }, [quantity]);
+
   return (
-    <ThemeProvider theme={themeSet}>
+    <ThemeProvider theme={theme}>
       <Container>
         <Title>styled-components theming</Title>
         <div style={{ display: "flex", gap: "1rem" }}>
